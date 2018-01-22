@@ -8,6 +8,8 @@
 #include "waypoint_follower_msgs/Waypoint.h"
 #include "waypoint_follower_msgs/WaypointArray.h"
 
+#include "centralised_auction/sequential_auction.h"
+
 using namespace std;
 using namespace task_msgs;
 using namespace geometry_msgs;
@@ -90,6 +92,11 @@ void allocateTasks(){
     int r = i % num_robots;
     allocated_tasks[r].array.push_back(t);
   }
+  
+  SequentialAuction solver;
+  cout << " x: " << solver.x_ << endl;
+  //SequentialAuction solver(unallocated_tasks, robot_poses);
+  //allocated_tasks = solver.solve();
   
 
 }
