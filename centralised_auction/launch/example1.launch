@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- Launch waypoint following.
+       tasks:  x,y,z,  x,y,z,w
+       robots: x,y,z                 -->
+  <node pkg="centralised_auction" type="centralised_auction_node" name="centralised_auction" output="screen">
+    <rosparam param="tasks">[ 1, 0, 0,  0, 0, 0, 1,
+                              2, 0, 0,  0, 0, 0, 0, 
+                              3, 0, 0,  0, 0, 0, 0]
+    </rosparam>
+    <rosparam param="robots">[0,  0, 0,
+                              0, 10, 0]
+    </rosparam>      
+  </node>
+  
+  <!-- Display on RVIZ. -->
+  <group if="true">
+    <node name="rviz" pkg="rviz" type="rviz"
+        args="-d $(find centralised_auction)/config/rviz.rviz">
+    </node>
+  </group>  
+  
+</launch>
