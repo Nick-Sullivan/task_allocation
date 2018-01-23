@@ -1,25 +1,31 @@
 <?xml version="1.0"?>
+
+<!-- Example 2, launches the centralised auction node to generate waypoint order.
+     The waypoint follower node receives this and produces pose arrays that can 
+     be viewed in RVIZ, as well as move_base commands (that are dropped in this
+     example because we're not running move_base). -->
 <launch>
 
   <!-- Launch waypoint following.
        tasks:  x,y,z,  x,y,z,w
        robots: x,y,z                 -->
   <node pkg="centralised_auction" type="centralised_auction_node" name="centralised_auction" output="screen">
-    <rosparam param="tasks">[ 1, 0, 0,  0, 0, 0, 1,
-                              2, 0, 0,  0, 0, 0, 0, 
-                              3, 0, 0,  0, 0, 0, 0]
+    <rosparam param="tasks">[ 1, -1, 0,  0, 0, 0, 1,
+                             -1,  1, 0,  0, 0, 0, 1, 
+                              2, -2, 0,  0, 0, 0, 1,
+                             -2, -4, 0,  0, 0, 0, 1]
     </rosparam>
-    <rosparam param="robots">[0,  0, 0,
-                              1,  0, 0]
-    </rosparam>      
+    <rosparam param="robots">[1, 0, 0,
+                             -1, 0, 0]
+    </rosparam>    
   </node>
   
   <!-- Launch waypoint following. -->
   <node ns="robot0" pkg="waypoint_follower" type="waypoint_follower_node" name="waypoint_follower" output="screen">
-    <remap from="set_waypoints" to="tasks"/>
+    <remap from="update_waypoints" to="tasks"/>
   </node>
   <node ns="robot1" pkg="waypoint_follower" type="waypoint_follower_node" name="waypoint_follower" output="screen">
-    <remap from="set_waypoints" to="tasks"/>
+    <remap from="update_waypoints" to="tasks"/>
   </node>
   
   <!-- Create static map to odom transforms. -->

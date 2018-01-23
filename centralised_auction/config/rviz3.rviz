@@ -5,6 +5,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
+        - /Axes1
       Splitter Ratio: 0.613889
     Tree Height: 679
   - Class: rviz/Selection
@@ -279,6 +280,13 @@ Visualization Manager:
       Topic: /jackal1/move_base/current_goal
       Unreliable: false
       Value: true
+    - Class: rviz/Axes
+      Enabled: true
+      Length: 1
+      Name: Axes
+      Radius: 0.1
+      Reference Frame: <Fixed Frame>
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -303,7 +311,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 11.2875
+      Distance: 13.7542
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
@@ -315,10 +323,10 @@ Visualization Manager:
         Z: 0
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.705398
+      Pitch: 1.3254
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 1.7054
+      Yaw: 3.11859
     Saved: ~
 Window Geometry:
   Displays:

@@ -23,6 +23,7 @@ vector<TaskArray> allocated_tasks;
 vector<ros::Publisher> pubs;
 int num_robots;
 int seq = 0;
+string prefix;
 
 /**************************************************
  * Helper functions
@@ -110,7 +111,7 @@ void allocateTasks(){
 void loadPubs(ros::NodeHandle n){
   for( int i=0; i<num_robots; i++ ){
     std::ostringstream strs;
-    strs << "/jackal";     // NNEED TO ADD TO CHANGE THIS IN LAUNCH FILE
+    strs << prefix;     // NEED TO ADD TO CHANGE THIS IN LAUNCH FILE
     strs << i;
     strs << "/tasks";
     //pubs.push_back( n.advertise<PoseArray>(strs.str(), 100) );
@@ -127,6 +128,9 @@ void loadParams(ros::NodeHandle n_priv){
   // Set default parameters.
   double default_waypoint_values[] = {};
   double default_robot_values[] = {};
+  string default_prefix = "robot";
+  
+  n_priv.param("prefix", prefix, default_prefix);
   
   // Check parameter server to override defaults.
   XmlRpc::XmlRpcValue v;

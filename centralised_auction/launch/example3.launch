@@ -1,4 +1,9 @@
 <?xml version="1.0"?>
+
+<!-- Example 3, launches the centralised auction node to generate waypoint order.
+     The waypoint follower node receives this and produces pose arrays that can 
+     be viewed in RVIZ, as well as move_base commands. The commands are then 
+     executed on the simulated Jackals. -->
 <launch>
   <!-- Start Gazebo with an empty world. -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -7,7 +12,7 @@
     <arg name="gui"          value="false"/>
 	  <arg name="headless"     value="false"/>			
     <arg name="world_name"   value="$(find my_jackal_gazebo)/worlds/slow_world.world"/>
-    <arg name="paused"       value="true"/>
+    <arg name="paused"       value="false"/>
   </include>
   
   <!-- Spawn the robots. -->
@@ -21,22 +26,21 @@
     <arg name="yaw"           value="3.14"/>
     <arg name="use_move_base" value="true"/>
   </include>-
-  
 
   <!-- Launch waypoint following.
        tasks:  x,y,z,  x,y,z,w
        robots: x,y,z                 -->
   <node pkg="centralised_auction" type="centralised_auction_node" name="centralised_auction" output="screen">
-    <rosparam param="tasks">[ 4, 4, 0,  0, 0, 0, 1,
+    <param name="prefix" value="jackal"/>
+    <rosparam param="tasks">[-4, 2, 0,  0, 0, 0, 1,
+                             -3,-4, 0,  0, 0, 0, 1,
+                             -1,-4, 0,  0, 0, 0, 1,
                              -1, 2, 0,  0, 0, 0, 1, 
                               3, 4, 0,  0, 0, 0, 1,
-                             -4, 2, 0,  0, 0, 0, 1,
-                             -1,-4, 0,  0, 0, 0, 1,
-                             -3,-4, 0,  0, 0, 0, 1,
-                              ]
+                              4, 4, 0,  0, 0, 0, 1]
     </rosparam>
     <rosparam param="robots">[0, 0, 0, 
-                              1, 0, 0]
+                             -1, 0, 0]
                               
     </rosparam>      
   </node>
