@@ -6,8 +6,8 @@
        robots: x,y,z                 -->
   <node pkg="centralised_auction" type="centralised_auction_node" name="centralised_auction" output="screen">
     <rosparam param="tasks">[ 1, 0, 0,  0, 0, 0, 1,
-                              2, 0, 0,  0, 0, 0, 0, 
-                              3, 0, 0,  0, 0, 0, 0]
+                              3, 4, 0,  0, 0, 0, 1, 
+                              3, 6, 0,  0, 0, 0, 1]
     </rosparam>
     <rosparam param="robots">[0,  0, 0,
                               0, 10, 0]
@@ -15,7 +15,7 @@
   </node>
   
   <!-- Display on RVIZ. -->
-  <group if="true">
+  <group if="false">
     <node name="rviz" pkg="rviz" type="rviz"
         args="-d $(find centralised_auction)/config/rviz.rviz">
     </node>

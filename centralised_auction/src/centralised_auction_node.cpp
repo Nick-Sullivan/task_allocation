@@ -87,16 +87,14 @@ void allocateTasks(){
   }
 
   // Allocate them all to the first robot.
-  for( int i=0; i<unallocated_tasks.size(); i++ ){
-    Task t = unallocated_tasks[i];
-    int r = i % num_robots;
-    allocated_tasks[r].array.push_back(t);
-  }
+  //for( int i=0; i<unallocated_tasks.size(); i++ ){
+  //  Task t = unallocated_tasks[i];
+  //  int r = i % num_robots;
+  //  allocated_tasks[r].array.push_back(t);
+  //}
   
-  SequentialAuction solver;
-  cout << " x: " << solver.x_ << endl;
-  //SequentialAuction solver(unallocated_tasks, robot_poses);
-  //allocated_tasks = solver.solve();
+  SequentialAuction solver(unallocated_tasks, robot_poses);
+  allocated_tasks = solver.allocateTasks();
   
 
 }
@@ -219,7 +217,7 @@ int main(int argc, char** argv){
   allocateTasks();
   publishAllocations();
     
-  ros::Rate r(0.2);
+  ros::Rate r(1);
   while( ros::ok() ){
     publishAllocations();
     ros::spinOnce();

@@ -7,7 +7,7 @@
     <arg name="gui"          value="false"/>
 	  <arg name="headless"     value="false"/>			
     <arg name="world_name"   value="$(find my_jackal_gazebo)/worlds/slow_world.world"/>
-    <arg name="paused"       value="false"/>
+    <arg name="paused"       value="true"/>
   </include>
   
   <!-- Spawn the robots. -->
