@@ -111,7 +111,7 @@ void allocateTasks(){
 void loadPubs(ros::NodeHandle n){
   for( int i=0; i<num_robots; i++ ){
     std::ostringstream strs;
-    strs << prefix;     // NEED TO ADD TO CHANGE THIS IN LAUNCH FILE
+    strs << prefix;   
     strs << i;
     strs << "/tasks";
     //pubs.push_back( n.advertise<PoseArray>(strs.str(), 100) );
