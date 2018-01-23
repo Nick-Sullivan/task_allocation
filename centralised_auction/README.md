@@ -4,7 +4,7 @@ ROS package for multi robot task allocation. Given a series of task and robot lo
 ## 1. Nodes
 ### 1.1 centralised_auction_node
 #### 1.1.1 Published Topics
-`prefix#/tasks` ([`WaypointArray`](task_msgs/msg/WaypointArray.msg))
+`prefix#/tasks` ([`WaypointArray`](../task_msgs/msg/WaypointArray.msg))
 
 The tasks to be completed, in order. `prefix` is a given parameter, and `#` is the robot ID.
 
