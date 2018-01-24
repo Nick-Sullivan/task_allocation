@@ -23,9 +23,11 @@
   <!-- Launch waypoint following. -->
   <node ns="robot0" pkg="waypoint_follower" type="waypoint_follower_node" name="waypoint_follower" output="screen">
     <remap from="update_waypoints" to="tasks"/>
+    <param name="odom_frame" value="robot0/odom"/>
   </node>
   <node ns="robot1" pkg="waypoint_follower" type="waypoint_follower_node" name="waypoint_follower" output="screen">
     <remap from="update_waypoints" to="tasks"/>
+    <param name="odom_frame" value="robot1/odom"/>
   </node>
   
   <!-- Create static map to odom transforms. -->

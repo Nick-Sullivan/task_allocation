@@ -6,14 +6,23 @@
 #include "geometry_msgs/Pose.h"
 #include "geometry_msgs/PoseArray.h"
 #include "waypoint_follower_msgs/Waypoint.h"
+#include "waypoint_follower_msgs/WaypointStamped.h"
 #include "waypoint_follower_msgs/WaypointArray.h"
 
 #include "centralised_auction/sequential_auction.h"
 
-using namespace std;
-using namespace task_msgs;
-using namespace geometry_msgs;
-using namespace waypoint_follower_msgs;
+using std::vector;
+using std::cout;
+using std::endl;
+using std::string;
+using task_msgs::Task;
+using task_msgs::TaskArray;
+using geometry_msgs::Pose;
+using geometry_msgs::PoseArray;
+using waypoint_follower_msgs::Waypoint;
+using waypoint_follower_msgs::WaypointStamped;
+using waypoint_follower_msgs::WaypointArray;
+
 
 vector<Task> unallocated_tasks;
 vector<Pose> robot_poses;
@@ -44,15 +53,17 @@ PoseArray taskArrayToPoseArray( TaskArray ta ){
 // Converts from TaskArray format to WaypointArray format.
 WaypointArray taskArrayToWaypointArray( TaskArray ta ){
   WaypointArray wa;
-  wa.header.seq      = seq++;
-  wa.header.stamp    = ros::Time::now();
-  wa.header.frame_id = "map";
+  WaypointStamped ws;
+  ws.header.seq      = seq++;
+  ws.header.stamp    = ros::Time::now();
+  ws.header.frame_id = "map";
   Waypoint w;
   w.type = 5;
   for( int i=0; i<ta.array.size(); i++ ){
     w.id   = i;
     w.pose = ta.array[i].pose;
-    wa.waypoints.push_back(w);
+    ws.waypoint = w;
+    wa.waypoints.push_back(ws);
   }
   return wa;
 }

@@ -5,7 +5,6 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /Axes1
       Splitter Ratio: 0.613889
     Tree Height: 679
   - Class: rviz/Selection
