@@ -107,7 +107,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
   INCLUDE_DIRS include
 #  LIBRARIES centralised_auction
-#  CATKIN_DEPENDS nav_msgs std_msgs waypoint_follower_msgs
+  CATKIN_DEPENDS nav_msgs std_msgs waypoint_follower_msgs task_msgs
 #  DEPENDS system_lib
 )
 
