@@ -47,17 +47,19 @@
   
   <!-- Launch waypoint following. -->
   <node ns="jackal0" pkg="waypoint_follower" type="waypoint_follower_node" name="waypoint_follower" output="screen">
-    <remap from="update_waypoints" to="tasks"/>
+    <remap from="update_waypoints"   to="tasks"/>
     <param name="waypoints_frame"    value="map"/>
     <param name="odom_frame"         value="jackal0/odom"/>
     <param name="baselink_frame"     value="jackal0/base_link"/>
+    <param name="rviz_frame"         value="map"/>
     <param name="include_robot_path" value="true"/>
   </node>
   <node ns="jackal1" pkg="waypoint_follower" type="waypoint_follower_node" name="waypoint_follower" output="screen">
-    <remap from="update_waypoints" to="tasks"/>
+    <remap from="update_waypoints"   to="tasks"/>
     <param name="waypoints_frame"    value="map"/>
     <param name="odom_frame"         value="jackal1/odom"/>
     <param name="baselink_frame"     value="jackal1/base_link"/>
+    <param name="rviz_frame"         value="map"/>
     <param name="include_robot_path" value="true"/>
   </node>
   
