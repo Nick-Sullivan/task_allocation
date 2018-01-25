@@ -33,6 +33,7 @@ vector<ros::Publisher> pubs;
 int num_robots;
 int seq = 0;
 string prefix;
+bool return_home;
 
 /**************************************************
  * Helper functions
@@ -80,6 +81,17 @@ void publishAllocations(){
     //PoseArray pa = taskArrayToPoseArray(ta);
     //pubs[i].publish( pa );
     WaypointArray wa = taskArrayToWaypointArray(ta);
+    if( return_home ){
+      WaypointStamped ws;
+      ws.header.seq         = seq++;
+      ws.header.stamp       = ros::Time::now();
+      ws.header.frame_id    = "map";
+      ws.waypoint.type      = 7;
+      ws.waypoint.completed = false;
+      ws.waypoint.id        = ta.array.size() + i;
+      ws.waypoint.pose      = robot_poses[i];
+      wa.waypoints.push_back(ws);
+    }
     pubs[i].publish( wa );
   }
 }
@@ -106,6 +118,8 @@ void allocateTasks(){
   //}
   
   SequentialAuction solver(unallocated_tasks, robot_poses);
+  solver.use_least_contested_bid = true;
+  if( return_home ) solver.return_home             = true;
   allocated_tasks = solver.allocateTasks();
   
 
@@ -140,7 +154,9 @@ void loadParams(ros::NodeHandle n_priv){
   double default_waypoint_values[] = {};
   double default_robot_values[] = {};
   string default_prefix = "robot";
+  bool default_return_home = true;
   
+  n_priv.param("return_home", return_home, default_return_home);
   n_priv.param("prefix", prefix, default_prefix);
   
   // Check parameter server to override defaults.

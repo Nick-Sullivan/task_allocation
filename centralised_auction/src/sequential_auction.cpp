@@ -1,7 +1,7 @@
 #include "centralised_auction/sequential_auction.h"
 
 /********************************************
- * Public functions.
+ * Public functions (high level).
  ********************************************/
  
 // Constructor.
@@ -12,6 +12,7 @@ SequentialAuction::SequentialAuction(vector<Task> unallocated_tasks,
   this->robot_poses = robot_poses;
   this->num_robots  = robot_poses.size();
   return_home = false;
+  use_least_contested_bid = false;
 }
 
 // The allocation procedure. Each iteration, selects a winner to allocate and
@@ -36,53 +37,9 @@ vector<TaskArray> SequentialAuction::allocateTasks(){
 }
 
 /********************************************
- * Private functions.
+ * Allocation processing (medium level)
  ********************************************/
  
-// Populates the allocations variable.
-void SequentialAuction::formOutput(){
-  allocations.clear();
-  for( int i=0; i<num_robots; i++ ){
-    TaskArray ta;
-    vector<int> path = paths[i];
-    for( int j=0; j<path.size(); j++ ){
-      int id = path[j];
-      ta.array.push_back(tasks[id]);
-    }
-    allocations.push_back(ta);
-  }
-}
-
-// Adds the winning task to the winning robots path, and removes the task from
-// the unallocated list. Also sets all bids for the winning task to -1.
-void SequentialAuction::processWinner(int winning_robot, int winning_task){
-  insertTask( winning_robot, winning_task, paths[winning_robot]);
-  for( int i=0; i<num_robots; i++ ){
-    bids[i][winning_task] = -1;
-  }
-  for( int i=0; i<unalloc.size(); i++ ){
-    if( unalloc[i] == winning_task ){
-      unalloc.erase(unalloc.begin()+i);
-      return;
-    }
-  }
-}
-
-// Selects the winning robot and task by the minimum non-negative bid.
-void SequentialAuction::selectWinner(int &winning_robot, int &winning_task){
-  double min_bid = -1;
-  for( int i=0; i<num_robots; i++ ){
-    for( int j=0; j<num_tasks; j++ ){
-      double bid = bids[i][j];
-      if( (bid < min_bid || min_bid == -1) && bid >= 0 ){
-        min_bid = bid;
-        winning_robot = i;
-        winning_task  = j;
-      }
-    }
-  }
-}
-
 // Clears paths, sets the correct size for bidding matrix.
 void SequentialAuction::prepareAllocations(){
   unalloc.clear();
@@ -112,6 +69,7 @@ void SequentialAuction::calculateAllBids(){
     calculateBids( i );
   }
 }
+
 // Populates the bidding matrix with bids for the currently unallocated tasks.
 void SequentialAuction::calculateBids( int robot_num ){
   for( int i=0; i<unalloc.size(); i++ ){
@@ -125,6 +83,84 @@ void SequentialAuction::calculateBids( int robot_num ){
     bids[robot_num][unalloc[i]] = new_cost;
   }
 }
+
+// Selects the winning robot and task by the minimum non-negative bid.
+void SequentialAuction::selectWinner(int &winning_robot, int &winning_task){
+  // Option - winner is the least contested bid.
+  if( use_least_contested_bid ){
+    double max_bid_diff, min_bid, min_bid2, bid_diff, bid;
+    int temp_winning_robot = -1;
+    max_bid_diff = -1;
+    for( int j=0; j<num_tasks; j++ ){
+      min_bid = -1;
+      min_bid2 = -1;
+      for( int i=0; i<num_robots; i++ ){
+        bid = bids[i][j];
+        if( (bid < min_bid || min_bid == -1) && bid >= 0){
+          min_bid2 = min_bid;
+          min_bid = bid;
+          temp_winning_robot = i;
+          continue;
+        }
+        if( (bid < min_bid2 || min_bid2 == -1) && bid >= 0){
+          min_bid2 = bid;
+        }
+      }
+      bid_diff = min_bid2 - min_bid;
+      if( bid_diff > max_bid_diff ) {
+        max_bid_diff = bid_diff;
+        winning_task = j;
+        winning_robot = temp_winning_robot;
+      }
+    }
+    return;
+  }
+  // Option (default) - winner is the lowest bid.
+  double min_bid = -1;
+  for( int i=0; i<num_robots; i++ ){
+    for( int j=0; j<num_tasks; j++ ){
+      double bid = bids[i][j];
+      if( (bid < min_bid || min_bid == -1) && bid >= 0 ){
+        min_bid = bid;
+        winning_robot = i;
+        winning_task  = j;
+      }
+    }
+  }
+}
+
+// Adds the winning task to the winning robots path, and removes the task from
+// the unallocated list. Also sets all bids for the winning task to -1.
+void SequentialAuction::processWinner(int winning_robot, int winning_task){
+  insertTask( winning_robot, winning_task, paths[winning_robot]);
+  for( int i=0; i<num_robots; i++ ){
+    bids[i][winning_task] = -1;
+  }
+  for( int i=0; i<unalloc.size(); i++ ){
+    if( unalloc[i] == winning_task ){
+      unalloc.erase(unalloc.begin()+i);
+      return;
+    }
+  }
+}
+
+// Populates the allocations variable.
+void SequentialAuction::formOutput(){
+  allocations.clear();
+  for( int i=0; i<num_robots; i++ ){
+    TaskArray ta;
+    vector<int> path = paths[i];
+    for( int j=0; j<path.size(); j++ ){
+      int id = path[j];
+      ta.array.push_back(tasks[id]);
+    }
+    allocations.push_back(ta);
+  }
+}
+
+/********************************************
+ * (low level).
+ ********************************************/
 
 // Calculate the new path if a task were to be inserted into a path. Returns
 // the cost of the new path.
@@ -176,6 +212,7 @@ double SequentialAuction::calculatePathCost( int robot_num, vector<int> path ){
   }
   return dist;
 }
+
 
 /********************************************
  * Printouts, purely for debugging.

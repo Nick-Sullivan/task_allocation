@@ -18,13 +18,15 @@ using geometry_msgs::Pose;
 
 class SequentialAuction {
   public:
+    bool              use_least_contested_bid;
+    bool              return_home;
+    
     SequentialAuction(vector<Task> unallocated_tasks,
                       vector<Pose> robot_poses);
     vector<TaskArray> allocateTasks();
     
   private:
     // These variables are unchanged through allocation.
-    bool              return_home;
     int               num_robots;
     int               num_tasks;
     vector<Pose>      robot_poses;
