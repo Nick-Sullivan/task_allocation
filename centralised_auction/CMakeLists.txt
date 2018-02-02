@@ -10,7 +10,9 @@ project(centralised_auction)
 find_package(catkin REQUIRED COMPONENTS
   nav_msgs
   std_msgs
+  waypoint_follower
   waypoint_follower_msgs
+  multi_jackal_gazebo
   roscpp
   task_msgs
 )

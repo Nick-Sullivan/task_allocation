@@ -11,18 +11,18 @@
     <arg name="debug"        value="false"/>
     <arg name="gui"          value="false"/>
 	  <arg name="headless"     value="true"/>			
-    <arg name="world_name"   value="$(find my_jackal_gazebo)/worlds/slow_world.world"/>
+    <arg name="world_name"   value="$(find multi_jackal_gazebo)/worlds/slow_world.world"/>
     <arg name="paused"       value="false"/>
   </include>
   
   <!-- Spawn the robots. -->
-  <include file="$(find my_jackal_base)/launch/jackal_base.launch">
+  <include file="$(find multi_jackal_base)/launch/jackal_base.launch">
     <arg name="ns"            value="jackal0"/>
 	  <arg name="use_move_base" value="true"/>
     <arg name="x"             value="2.9"/>
     <arg name="y"             value="1.9"/>
   </include>
-  <include file="$(find my_jackal_base)/launch/jackal_base.launch">
+  <include file="$(find multi_jackal_base)/launch/jackal_base.launch">
     <arg name="ns"            value="jackal1"/>
     <arg name="x"             value="5.3"/>
     <arg name="y"             value="0.7"/>
