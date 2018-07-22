@@ -12,7 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   waypoint_follower
   waypoint_follower_msgs
-  multi_jackal_gazebo
+  multi_jackal_tutorials
   roscpp
   task_msgs
 )

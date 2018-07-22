@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- Example 4, launches the centralised auction node to generate waypoint order.
+<!-- Example 3, launches the centralised auction node to generate waypoint order.
      The waypoint follower node receives this and produces pose arrays that can 
      be viewed in RVIZ, as well as move_base commands. The commands are then 
      executed on the simulated Jackals. -->
@@ -11,68 +11,62 @@
     <arg name="debug"        value="false"/>
     <arg name="gui"          value="false"/>
 	  <arg name="headless"     value="true"/>			
-    <arg name="world_name"   value="$(find multi_jackal_gazebo)/worlds/slow_world.world"/>
+    <arg name="world_name"   value="$(find multi_jackal_tutorials)/worlds/slow_world.world"/>
     <arg name="paused"       value="false"/>
   </include>
   
   <!-- Spawn the robots. -->
   <include file="$(find multi_jackal_base)/launch/jackal_base.launch">
     <arg name="ns"            value="jackal0"/>
-	  <arg name="use_move_base" value="true"/>
-    <arg name="x"             value="2.9"/>
-    <arg name="y"             value="1.9"/>
   </include>
   <include file="$(find multi_jackal_base)/launch/jackal_base.launch">
     <arg name="ns"            value="jackal1"/>
-    <arg name="x"             value="5.3"/>
-    <arg name="y"             value="0.7"/>
+    <arg name="x"             value="-1"/>
     <arg name="yaw"           value="3.14"/>
-    <arg name="use_move_base" value="true"/>
-  </include>-
+  </include>
 
   <!-- Launch waypoint following.
        tasks:  x,y,z,  x,y,z,w
        robots: x,y,z                 -->
-  <node pkg="centralised_auction" type="centralised_auction_node" name="centralised_auction" output="screen">
+  <node pkg="centralised_auction" type="centralised_auction_node" 
+        name="centralised_auction" output="screen">
     <param name="prefix" value="jackal"/>
-    <rosparam param="tasks">[7.8, 6.6, 0,  0, 0, 0, 1,
-                             6.4, 5.8, 0,  0, 0, 0, 1,
-                             0.4, 3.6, 0,  0, 0, 0, 1,
-                             9.5, 0.6, 0,  0, 0, 0, 1, 
-                             8.6, 8.8, 0,  0, 0, 0, 1,
-                             0.5, 6.5, 0,  0, 0, 0, 1,
-                             5.5, 6.0, 0,  0, 0, 0, 1,
-                             4.8, 2.8, 0,  0, 0, 0, 1,
-                             3.0, 5.6, 0,  0, 0, 0, 1,
-                             4.0, 7.9, 0,  0, 0, 0, 1]
+    <rosparam param="tasks">[-4, 2, 0,  0, 0, 0, 1,
+                             -3,-4, 0,  0, 0, 0, 1,
+                             -1,-4, 0,  0, 0, 0, 1,
+                             -1, 2, 0,  0, 0, 0, 1, 
+                              3, 4, 0,  0, 0, 0, 1,
+                              4, 4, 0,  0, 0, 0, 1,
+                              3,-4, 0,  0, 0, 0, 1]
     </rosparam>
-    <rosparam param="robots">[2.9, 1.9, 0, 
-                              5.3, 0.7, 0]
+    <rosparam param="robots">[0, 0, 0, 
+                             -1, 0, 0]
     </rosparam>      
   </node>
   
-  <!-- Launch waypoint following. -->
-  <node ns="jackal0" pkg="waypoint_follower" type="waypoint_follower_node" name="waypoint_follower" output="screen">
-    <remap from="update_waypoints"   to="tasks"/>
-    <param name="waypoints_frame"    value="map"/>
-    <param name="odom_frame"         value="jackal0/odom"/>
-    <param name="baselink_frame"     value="jackal0/base_link"/>
-    <param name="rviz_frame"         value="map"/>
-    <param name="include_robot_path" value="true"/>
+  <!-- Launch waypoint following. Change out put to 'screen' or 'log' to show
+       or hide terminal output.-->
+  <node ns="jackal0" pkg="waypoint_follower" type="waypoint_follower2_node" 
+        name="waypoint_follower" output="log">
+    <param name="odom_frame"       value="jackal0/odom"/>
+    <param name="baselink_frame"   value="jackal0/base_link"/>
+    <param name="lin_vel"          value="0.5"/>
+    <param name="ang_vel"          value="1.5"/>
+    <remap from="set_waypoints"    to="tasks"/>
   </node>
-  <node ns="jackal1" pkg="waypoint_follower" type="waypoint_follower_node" name="waypoint_follower" output="screen">
-    <remap from="update_waypoints"   to="tasks"/>
-    <param name="waypoints_frame"    value="map"/>
-    <param name="odom_frame"         value="jackal1/odom"/>
-    <param name="baselink_frame"     value="jackal1/base_link"/>
-    <param name="rviz_frame"         value="map"/>
-    <param name="include_robot_path" value="true"/>
+  <node ns="jackal1" pkg="waypoint_follower" type="waypoint_follower2_node" 
+        name="waypoint_follower" output="log">
+    <param name="odom_frame"       value="jackal1/odom"/>
+    <param name="baselink_frame"   value="jackal1/base_link"/>
+    <param name="lin_vel"          value="0.5"/>
+    <param name="ang_vel"          value="1.5"/>
+    <remap from="set_waypoints"    to="tasks"/>
   </node>
   
   <!-- Display on RVIZ. -->
   <group if="true">
     <node name="rviz" pkg="rviz" type="rviz"
-        args="-d $(find centralised_auction)/config/rviz4.rviz">
+        args="-d $(find centralised_auction)/config/rviz3.rviz">
     </node>
   </group>  
   

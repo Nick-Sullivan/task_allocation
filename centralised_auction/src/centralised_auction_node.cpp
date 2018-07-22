@@ -5,8 +5,8 @@
 #include "task_msgs/TaskArray.h"
 #include "geometry_msgs/Pose.h"
 #include "geometry_msgs/PoseArray.h"
-#include "waypoint_follower_msgs/Waypoint.h"
-#include "waypoint_follower_msgs/WaypointStamped.h"
+//#include "waypoint_follower_msgs/Waypoint.h"
+//#include "waypoint_follower_msgs/WaypointStamped.h"
 #include "waypoint_follower_msgs/WaypointArray.h"
 
 #include "centralised_auction/sequential_auction.h"
@@ -19,8 +19,7 @@ using task_msgs::Task;
 using task_msgs::TaskArray;
 using geometry_msgs::Pose;
 using geometry_msgs::PoseArray;
-using waypoint_follower_msgs::Waypoint;
-using waypoint_follower_msgs::WaypointStamped;
+using geometry_msgs::PoseStamped;
 using waypoint_follower_msgs::WaypointArray;
 
 
@@ -54,17 +53,13 @@ PoseArray taskArrayToPoseArray( TaskArray ta ){
 // Converts from TaskArray format to WaypointArray format.
 WaypointArray taskArrayToWaypointArray( TaskArray ta ){
   WaypointArray wa;
-  WaypointStamped ws;
-  ws.header.seq      = seq++;
-  ws.header.stamp    = ros::Time::now();
-  ws.header.frame_id = "map";
-  Waypoint w;
-  w.type = 5;
+  PoseStamped ps;
+  ps.header.seq      = seq++;
+  ps.header.stamp    = ros::Time::now();
+  ps.header.frame_id = "map";
   for( int i=0; i<ta.array.size(); i++ ){
-    w.id   = i;
-    w.pose = ta.array[i].pose;
-    ws.waypoint = w;
-    wa.waypoints.push_back(ws);
+    ps.pose = ta.array[i].pose;
+    wa.waypoints.push_back(ps);
   }
   return wa;
 }
@@ -82,14 +77,11 @@ void publishAllocations(){
     //pubs[i].publish( pa );
     WaypointArray wa = taskArrayToWaypointArray(ta);
     if( return_home ){
-      WaypointStamped ws;
+      PoseStamped ws;
       ws.header.seq         = seq++;
       ws.header.stamp       = ros::Time::now();
       ws.header.frame_id    = "map";
-      ws.waypoint.type      = 7;
-      ws.waypoint.completed = false;
-      ws.waypoint.id        = ta.array.size() + i;
-      ws.waypoint.pose      = robot_poses[i];
+      ws.pose      = robot_poses[i];
       wa.waypoints.push_back(ws);
     }
     pubs[i].publish( wa );
@@ -116,13 +108,15 @@ void allocateTasks(){
   //  int r = i % num_robots;
   //  allocated_tasks[r].array.push_back(t);
   //}
-  
+  cout << "Prepping task allocation. " << endl;
   SequentialAuction solver(unallocated_tasks, robot_poses);
-  solver.use_least_contested_bid = true;
+  solver.use_least_contested_bid = false;   
   if( return_home ) solver.return_home             = true;
+  cout << "Allocating tasks." << endl;
   allocated_tasks = solver.allocateTasks();
+  cout << "Finished allocating." << endl;
   
-
+  ros::Duration(2).sleep();
 }
 
 

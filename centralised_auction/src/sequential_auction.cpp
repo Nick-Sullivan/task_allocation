@@ -87,7 +87,7 @@ void SequentialAuction::calculateBids( int robot_num ){
 // Selects the winning robot and task by the minimum non-negative bid.
 void SequentialAuction::selectWinner(int &winning_robot, int &winning_task){
   // Option - winner is the least contested bid.
-  if( use_least_contested_bid ){
+  if( use_least_contested_bid && num_robots > 1){
     double max_bid_diff, min_bid, min_bid2, bid_diff, bid;
     int temp_winning_robot = -1;
     max_bid_diff = -1;
